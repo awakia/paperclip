@@ -38,6 +38,7 @@ module Paperclip
       @whiny               = options[:whiny].nil? ? true : options[:whiny]
       @format              = options[:format]
       @animated            = options[:animated].nil? ? true : options[:animated]
+      @use_layers          = options[:use_layers]
       @auto_orient         = options[:auto_orient].nil? ? true : options[:auto_orient]
       if @auto_orient && @current_geometry.respond_to?(:auto_orient)
         @current_geometry.auto_orient
@@ -77,7 +78,7 @@ module Paperclip
 
         parameters = parameters.flatten.compact.join(" ").strip.squeeze(" ")
 
-        success = convert(parameters, :source => "#{File.expand_path(src.path)}#{'[0]' unless animated?}", :dest => File.expand_path(dst.path))
+        success = convert(parameters, :source => "#{File.expand_path(src.path)}#{'[0]' unless animated? || @use_layers}", :dest => File.expand_path(dst.path))
       rescue Cocaine::ExitStatusError => e
         raise Paperclip::Error, "There was an error processing the thumbnail for #{@basename}" if @whiny
       rescue Cocaine::CommandNotFoundError => e
